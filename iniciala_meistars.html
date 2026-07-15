@@ -44,7 +44,9 @@
  
   .stage{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;margin-top:24px;align-items:end;}
   @media (max-width:800px){ .stage{grid-template-columns:1fr;} }
-  #restSvg{max-width:130px;}
+  #restSvg{width:auto;height:auto;max-width:none;}
+  .panel.compact{width:fit-content;justify-self:end;padding:14px 18px;}
+  .panel.compact .canvas-holder{padding:4px;display:inline-flex;}
   .panel{
     background:linear-gradient(160deg,var(--paper) 0%,var(--paper-2) 100%);
     border:1px solid var(--paper-edge);border-radius:8px;padding:18px;position:relative;overflow:hidden;
@@ -123,7 +125,7 @@
       <div class="sub">Ar "Zīmēt" pievieno brīvroku detaļas, ar "Dzēšgumija" izlabo</div>
       <div class="canvas-holder"><svg id="initialSvg" viewBox="0 0 500 500"></svg></div>
     </div>
-    <div class="panel">
+    <div class="panel compact">
       <h2>Pārējais vārds</h2>
       <div class="sub">Candara fontā, nedekorēts</div>
       <div class="canvas-holder"><svg id="restSvg" viewBox="0 0 300 55"></svg></div>
@@ -462,15 +464,23 @@
   function renderRestWord(){
     const svg = document.getElementById('restSvg');
     svg.innerHTML = '';
+    const rest = restOfWord();
+    const size = rest ? Math.max(16, Math.min(34, 260/Math.max(rest.length,1))) : 34;
+    const padX = 14, padY = 10;
+    const charW = size*0.56;
+    const boxW = Math.max(46, rest.length*charW + padX*2);
+    const boxH = size + padY*2;
+    svg.setAttribute('viewBox', `0 0 ${f(boxW)} ${f(boxH)}`);
+    svg.setAttribute('width', f(boxW));
+    svg.setAttribute('height', f(boxH));
+ 
     const bg = document.createElementNS(NS,'rect');
-    bg.setAttribute('x',0); bg.setAttribute('y',0); bg.setAttribute('width',300); bg.setAttribute('height',55);
+    bg.setAttribute('x',0); bg.setAttribute('y',0); bg.setAttribute('width',boxW); bg.setAttribute('height',boxH);
     bg.setAttribute('fill', bgColor); bg.setAttribute('rx',8);
     svg.appendChild(bg);
-    const rest = restOfWord();
     if(rest){
-      const size = Math.max(10, Math.min(22, 200/Math.max(rest.length,1)));
       const text = document.createElementNS(NS,'text');
-      text.setAttribute('x',10); text.setAttribute('y',29);
+      text.setAttribute('x',padX); text.setAttribute('y',f(boxH/2));
       text.setAttribute('text-anchor','start');
       text.setAttribute('dominant-baseline','central');
       text.setAttribute('font-family',"'Candara', sans-serif");
@@ -654,7 +664,8 @@
       ctx.fillStyle = '#171022';
       ctx.fillRect(0,0,820,500);
       ctx.drawImage(img1,0,0,500,500);
-      ctx.drawImage(img2,520,440,300,55);
+      const w2 = img2.naturalWidth || 300, h2 = img2.naturalHeight || 55;
+      ctx.drawImage(img2, 820-20-w2, 500-20-h2, w2, h2);
       const link = document.createElement('a');
       link.download = 'iniciala-meistars.png';
       link.href = canvas.toDataURL('image/png');
