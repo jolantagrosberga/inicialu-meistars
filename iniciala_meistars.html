@@ -41,10 +41,10 @@
   .info-box b{color:var(--oxblood);font-family:'Cinzel',serif;font-size:13px;text-transform:uppercase;letter-spacing:0.05em;}
   .info-box ul{margin:8px 0 0;padding-left:18px;}
   .font-note{max-width:680px;margin:10px auto 0;font-size:13px;color:var(--ink-light-dim);opacity:0.8;text-align:center;line-height:1.55;font-style:italic;}
-
-  .stage{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;margin-top:24px;align-items:start;}
+ 
+  .stage{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;margin-top:24px;align-items:end;}
   @media (max-width:800px){ .stage{grid-template-columns:1fr;} }
-  #restSvg{max-width:220px;}
+  #restSvg{max-width:130px;}
   .panel{
     background:linear-gradient(160deg,var(--paper) 0%,var(--paper-2) 100%);
     border:1px solid var(--paper-edge);border-radius:8px;padding:18px;position:relative;overflow:hidden;
@@ -56,14 +56,14 @@
     pointer-events:none;}
   .panel h2{font-family:'Cinzel',serif;font-size:15px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--oxblood);margin:0 0 6px;padding-bottom:8px;border-bottom:1px solid var(--paper-edge);}
   .panel .sub{font-size:13px;color:var(--ink-dark-dim);margin-bottom:12px;font-style:italic;}
-
+ 
   .canvas-holder{display:flex;align-items:center;justify-content:center;border-radius:10px;padding:10px;position:relative;overflow:hidden;
     background:radial-gradient(circle at 50% 40%, rgba(0,0,0,0.12), rgba(0,0,0,0.32) 82%);
     border:1px solid rgba(0,0,0,0.25);}
   svg{display:block;width:100%;height:auto;max-width:460px;border-radius:6px;user-select:none;-webkit-user-select:none;touch-action:none;}
   svg text{user-select:none;-webkit-user-select:none;}
   .freehand-line{fill:none;stroke-linecap:round;stroke-linejoin:round;}
-
+ 
   .ctrlbar{
     margin-top:18px;background:linear-gradient(160deg,var(--paper) 0%,var(--paper-2) 100%);
     border:1px solid var(--paper-edge);border-radius:8px;padding:20px;
@@ -96,7 +96,7 @@
   .btn-toggle{background:rgba(60,43,23,0.06);color:var(--ink-dark-dim);border:1px solid var(--paper-edge);}
   .btn-toggle.active{background:linear-gradient(160deg,var(--oxblood-2),var(--oxblood));color:var(--ink-light);border-color:transparent;}
   .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
-
+ 
   footer{text-align:center;margin-top:26px;color:var(--ink-light-dim);font-size:13px;opacity:0.75;font-style:italic;}
 </style>
 </head>
@@ -116,7 +116,7 @@
       </ul>
     </div>
   </header>
-
+ 
   <div class="stage">
     <div class="panel">
       <h2>Tavs iniciālis</h2>
@@ -126,10 +126,10 @@
     <div class="panel">
       <h2>Pārējais vārds</h2>
       <div class="sub">Candara fontā, nedekorēts</div>
-      <div class="canvas-holder"><svg id="restSvg" viewBox="0 0 300 90"></svg></div>
+      <div class="canvas-holder"><svg id="restSvg" viewBox="0 0 300 55"></svg></div>
     </div>
   </div>
-
+ 
   <div class="ctrlbar">
     <div class="ctrl-row">
       <div class="ctrl-group">
@@ -217,10 +217,10 @@
     </div>
   </div>
   <p class="font-note">Piezīme: Baguet Script, Adelina Camarie, Algerian, Vivaldi, Imprint MT Shadow, The Lighters, Docktrin, Gladiolus Script, Ligakare outline un Modern Neon ir sistēmas/licencēti fonti — burts tajos parādīsies pareizi, ja fonts ir instalēts izmantotajā ierīcē, citādi pārlūks izmantos aizvietotājfontu. ADLaM Display un Candara strādā visur automātiski.</p>
-
+ 
   <footer>Rīks nesaglabā datus — katra klase to sāk no jauna. · visaskola.lv</footer>
 </div>
-
+ 
 <script>
 (function(){
   const NS = 'http://www.w3.org/2000/svg';
@@ -241,7 +241,7 @@
   let currentRawPts = [];
   let isDrawing = false;
   let isErasing = false;
-
+ 
   function f(n){ return Math.round(n*100)/100; }
   const fontMap = {
     baguet: "'Baguet Script', cursive",
@@ -257,7 +257,7 @@
     ligakare: "'Ligakare outline', sans-serif",
     modernneon: "'Modern Neon', cursive"
   };
-
+ 
   // ---------- palettes ----------
   function buildMainPalette(){
     const wrap = document.getElementById('mainPalette');
@@ -307,7 +307,7 @@
       wrap.appendChild(sw);
     });
   }
-
+ 
   // ---------- small motif builder (used only for border decoration) ----------
   function buildMotif(shape,x,y,rot,scale,color){
     const g = document.createElementNS(NS,'g');
@@ -330,7 +330,7 @@
     }
     return g;
   }
-
+ 
   // ---------- border renderers ----------
   function renderDottedBorder(svg,count,color){
     const insets = count===1 ? [16] : count===2 ? [12,24] : [10,20,30];
@@ -404,16 +404,16 @@
     else if(borderStyle==='geometric') renderGeometricBorder(svg,lineCount,borderColor);
     else if(borderStyle==='vine') renderVineBorder(svg,borderColor);
   }
-
+ 
   // ---------- word helpers ----------
   function firstLetter(){ return (word.charAt(0) || 'A').toUpperCase(); }
   function restOfWord(){ return word.slice(1); }
-
+ 
   // ---------- main render ----------
   function renderInitial(){
     const svg = document.getElementById('initialSvg');
     svg.innerHTML = '';
-
+ 
     const defs = document.createElementNS(NS,'defs');
     const vign = document.createElementNS(NS,'radialGradient');
     vign.setAttribute('id','parchVign'); vign.setAttribute('cx','50%'); vign.setAttribute('cy','42%'); vign.setAttribute('r','70%');
@@ -422,17 +422,17 @@
     vign.appendChild(s1); vign.appendChild(s2);
     defs.appendChild(vign);
     svg.appendChild(defs);
-
+ 
     const bg = document.createElementNS(NS,'rect');
     bg.setAttribute('x',0); bg.setAttribute('y',0); bg.setAttribute('width',500); bg.setAttribute('height',500);
     bg.setAttribute('fill', bgColor); bg.setAttribute('rx',14);
     svg.appendChild(bg);
-
+ 
     const vg = document.createElementNS(NS,'rect');
     vg.setAttribute('x',0); vg.setAttribute('y',0); vg.setAttribute('width',500); vg.setAttribute('height',500);
     vg.setAttribute('fill','url(#parchVign)'); vg.setAttribute('rx',14);
     svg.appendChild(vg);
-
+ 
     const text = document.createElementNS(NS,'text');
     text.setAttribute('x',250); text.setAttribute('y',258);
     text.setAttribute('text-anchor','middle');
@@ -444,7 +444,7 @@
     text.setAttribute('stroke-width', 1.5);
     text.textContent = firstLetter();
     svg.appendChild(text);
-
+ 
     const ornG = document.createElementNS(NS,'g');
     placed.forEach(item=>{
       const p = document.createElementNS(NS,'path');
@@ -455,22 +455,22 @@
       ornG.appendChild(p);
     });
     svg.appendChild(ornG);
-
+ 
     renderBorder(svg);
   }
-
+ 
   function renderRestWord(){
     const svg = document.getElementById('restSvg');
     svg.innerHTML = '';
     const bg = document.createElementNS(NS,'rect');
-    bg.setAttribute('x',0); bg.setAttribute('y',0); bg.setAttribute('width',300); bg.setAttribute('height',90);
-    bg.setAttribute('fill', bgColor); bg.setAttribute('rx',10);
+    bg.setAttribute('x',0); bg.setAttribute('y',0); bg.setAttribute('width',300); bg.setAttribute('height',55);
+    bg.setAttribute('fill', bgColor); bg.setAttribute('rx',8);
     svg.appendChild(bg);
     const rest = restOfWord();
     if(rest){
-      const size = Math.max(14, Math.min(34, 220/Math.max(rest.length,1)));
+      const size = Math.max(10, Math.min(22, 200/Math.max(rest.length,1)));
       const text = document.createElementNS(NS,'text');
-      text.setAttribute('x',14); text.setAttribute('y',47);
+      text.setAttribute('x',10); text.setAttribute('y',29);
       text.setAttribute('text-anchor','start');
       text.setAttribute('dominant-baseline','central');
       text.setAttribute('font-family',"'Candara', sans-serif");
@@ -480,13 +480,13 @@
       svg.appendChild(text);
     }
   }
-
+ 
   function eraseAt(p){
     const before = placed.length;
     placed = placed.filter(item => !item.pts.some(pt => Math.hypot(pt.x-p.x, pt.y-p.y) < 18));
     if(placed.length !== before) renderInitial();
   }
-
+ 
   function setupCanvasEvents(){
     const svg = document.getElementById('initialSvg');
     function svgPoint(evt){
@@ -545,7 +545,7 @@
     const svg = document.getElementById('initialSvg');
     svg.style.cursor = activeTool==='none' ? 'default' : 'crosshair';
   }
-
+ 
   // ---------- controls ----------
   document.getElementById('letterInput').addEventListener('input', e=>{
     let v = e.target.value.slice(0,24);
@@ -654,14 +654,14 @@
       ctx.fillStyle = '#171022';
       ctx.fillRect(0,0,820,500);
       ctx.drawImage(img1,0,0,500,500);
-      ctx.drawImage(img2,520,190,300,90);
+      ctx.drawImage(img2,520,440,300,55);
       const link = document.createElement('a');
       link.download = 'iniciala-meistars.png';
       link.href = canvas.toDataURL('image/png');
       link.click();
     });
   });
-
+ 
   // ---------- init ----------
   buildMainPalette();
   buildBorderPalette();
