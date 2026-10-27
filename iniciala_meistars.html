@@ -16,37 +16,44 @@
     --ink-light:#f0e6cc; --ink-light-dim:#cbb488;
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    min-height:100vh;
+  html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;}
+  body{background:#1c0f07;}
+  #app{
+    position:absolute;top:0;left:0;width:1600px;height:900px;transform-origin:0 0;overflow:hidden;
+    padding:18px 28px 20px;display:flex;flex-direction:column;
     background:
       radial-gradient(ellipse 900px 500px at 50% -8%, rgba(169,122,43,0.16), transparent 60%),
       linear-gradient(180deg,var(--leather-deep) 0%,var(--leather-mid) 45%,#1c0f07 100%);
     font-family:'EB Garamond',Georgia,serif;
     color:var(--ink-light);
-    padding:30px 16px 60px;
   }
-  .wrap{max-width:1020px;margin:0 auto;}
-  header{text-align:center;margin-bottom:22px;}
+  header{text-align:center;margin-bottom:16px;position:relative;flex-shrink:0;}
   h1{
-    font-family:'Cinzel',serif;font-weight:700;font-size:clamp(26px,4vw,40px);letter-spacing:0.03em;margin:0 0 10px;
+    font-family:'Cinzel',serif;font-weight:700;font-size:38px;letter-spacing:0.03em;margin:0 0 4px;
     color:var(--gold-bright);
     text-shadow:0 1px 0 rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.4);
   }
-  header p{color:var(--ink-light-dim);max-width:640px;margin:0 auto;font-size:16px;line-height:1.65;font-style:italic;}
-  .info-toggle{display:inline-block;margin-top:12px;font-size:14px;font-family:'EB Garamond',serif;color:var(--gold-bright);cursor:pointer;border:1px solid rgba(201,154,63,0.45);padding:6px 14px;border-radius:20px;background:rgba(201,154,63,0.08);}
+  header p{color:var(--ink-light-dim);max-width:980px;margin:0 auto;font-size:16px;line-height:1.5;font-style:italic;}
+  .info-toggle{position:absolute;left:0;top:50%;transform:translateY(-50%);font-size:14px;font-family:'EB Garamond',serif;color:var(--gold-bright);cursor:pointer;border:1px solid rgba(201,154,63,0.45);padding:6px 14px;border-radius:20px;background:rgba(201,154,63,0.08);}
   .info-toggle:hover{background:rgba(201,154,63,0.16);}
-  .info-box{max-width:680px;margin:14px auto 0;background:linear-gradient(160deg,var(--paper) 0%,var(--paper-2) 100%);border:1px solid var(--paper-edge);border-radius:6px;padding:18px 22px;font-size:15px;line-height:1.7;color:var(--ink-dark-dim);text-align:left;display:none;box-shadow:0 8px 20px rgba(0,0,0,0.35);}
+  .info-box{position:absolute;left:0;top:calc(100% + 8px);z-index:50;width:620px;margin:0;background:linear-gradient(160deg,var(--paper) 0%,var(--paper-2) 100%);border:1px solid var(--paper-edge);border-radius:6px;padding:18px 22px;font-size:15px;line-height:1.7;color:var(--ink-dark-dim);text-align:left;display:none;box-shadow:0 8px 20px rgba(0,0,0,0.35);}
   .info-box.open{display:block;}
   .info-box b{color:var(--oxblood);font-family:'Cinzel',serif;font-size:13px;text-transform:uppercase;letter-spacing:0.05em;}
   .info-box ul{margin:8px 0 0;padding-left:18px;}
-  .font-note{max-width:680px;margin:10px auto 0;font-size:13px;color:var(--ink-light-dim);opacity:0.8;text-align:center;line-height:1.55;font-style:italic;}
+  .font-note{margin:12px 0 0;font-size:12.5px;color:var(--ink-dark-dim);opacity:0.8;text-align:center;line-height:1.55;font-style:italic;}
  
-  .stage{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;margin-top:24px;align-items:end;}
-  @media (max-width:800px){ .stage{grid-template-columns:1fr;} }
+  .main{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:930px 1fr;gap:20px;}
+  .stage{display:flex;gap:16px;align-items:flex-end;}
+  .stage .canvas-holder{flex-shrink:0;}
+  #initialSvg{width:650px;height:650px;max-width:none;}
   #restSvg{width:auto;height:auto;max-width:none;}
-  .panel.compact{width:fit-content;justify-self:start;padding:14px 18px;}
-  .panel.compact .canvas-holder{padding:4px;display:inline-flex;}
+  .rest-box{display:flex;flex-direction:column;gap:6px;}
+  .rest-box .canvas-holder{padding:4px;display:inline-flex;}
+  .rest-box .lab{font-family:'Cinzel',serif;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--oxblood);}
+  .rest-box .sub{margin-bottom:0;}
+  #fsBtn{position:absolute;right:0;top:50%;transform:translateY(-50%);font-family:'Cinzel',serif;font-weight:600;font-size:14px;
+    background:rgba(201,154,63,0.10);color:var(--gold-bright);border:1.5px solid var(--gold-bright);border-radius:999px;padding:9px 18px;cursor:pointer;}
+  #fsBtn:hover{background:var(--gold-bright);color:#2b1a08;}
   .panel{
     background:linear-gradient(160deg,var(--paper) 0%,var(--paper-2) 100%);
     border:1px solid var(--paper-edge);border-radius:8px;padding:18px;position:relative;overflow:hidden;
@@ -67,10 +74,13 @@
   .freehand-line{fill:none;stroke-linecap:round;stroke-linejoin:round;}
  
   .ctrlbar{
-    margin-top:18px;background:linear-gradient(160deg,var(--paper) 0%,var(--paper-2) 100%);
-    border:1px solid var(--paper-edge);border-radius:8px;padding:20px;
+    margin-top:0;display:flex;flex-direction:column;background:linear-gradient(160deg,var(--paper) 0%,var(--paper-2) 100%);
+    border:1px solid var(--paper-edge);border-radius:8px;padding:18px 20px;
     box-shadow:0 10px 26px rgba(0,0,0,0.4);
   }
+  .ctrl-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;grid-auto-flow:row dense;}
+  .ctrl-grid .ctrl-row{display:contents;}
+  .ctrl-grid .full{grid-column:1/-1;}
   .ctrl-row{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start;justify-content:space-between;margin-bottom:16px;}
   .ctrl-row:last-child{margin-bottom:0;}
   .ctrl-group{flex:1 1 180px;}
@@ -81,15 +91,15 @@
     padding:9px 12px;font-family:'EB Garamond',serif;font-size:15px;width:100%;cursor:pointer;
   }
   input.letter-input{text-align:center;font-family:'Cinzel',serif;font-size:22px;font-weight:700;cursor:text;}
-  .swatches{display:flex;flex-wrap:wrap;gap:8px;}
-  .swatch{width:30px;height:30px;border-radius:6px;border:2px solid rgba(60,43,23,0.3);cursor:pointer;transition:transform .12s,border-color .12s;}
+  .swatches{display:flex;flex-wrap:wrap;gap:5px;}
+  .swatch{width:26px;height:26px;border-radius:6px;border:2px solid rgba(60,43,23,0.3);cursor:pointer;transition:transform .12s,border-color .12s;}
   .swatch:hover{transform:scale(1.08);}
   .swatch.selected{border-color:var(--ink-dark);box-shadow:0 0 0 2px var(--gold-bright);}
   input[type=color].swatch{padding:0;}
   .mixer-row{display:flex;align-items:center;gap:10px;}
   .mixer-row input[type=range]{flex:1;accent-color:var(--oxblood);cursor:pointer;}
   .mixer-gradient-bar{height:8px;border-radius:5px;margin-top:6px;border:1px solid var(--paper-edge);}
-  button.action{font-family:'Cinzel',serif;font-weight:500;font-size:12.5px;letter-spacing:0.02em;padding:10px 15px;border-radius:6px;border:none;cursor:pointer;transition:filter .15s,transform .1s;}
+  button.action{font-family:'Cinzel',serif;font-weight:500;font-size:12.5px;letter-spacing:0.02em;padding:9px 12px;border-radius:6px;border:none;cursor:pointer;transition:filter .15s,transform .1s;}
   button.action:active{transform:translateY(1px);}
   .btn-clear{background:linear-gradient(160deg,var(--leather-light),var(--leather-mid));color:var(--ink-light);border:1px solid var(--leather-deep);}
   .btn-clear:hover{filter:brightness(1.15);}
@@ -99,12 +109,13 @@
   .btn-toggle.active{background:linear-gradient(160deg,var(--oxblood-2),var(--oxblood));color:var(--ink-light);border-color:transparent;}
   .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
  
-  footer{text-align:center;margin-top:26px;color:var(--ink-light-dim);font-size:13px;opacity:0.75;font-style:italic;}
+  footer{text-align:left;margin-top:6px;color:var(--ink-dark-dim);font-size:13px;opacity:0.75;font-style:italic;}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div id="app">
   <header>
+    <button id="fsBtn" type="button">⛶ Atvērt pilnekrānu</button>
     <h1>Iniciāļa meistars</h1>
     <p>Viduslaiku rakstu mūki savu manuskriptu pirmo burtu — iniciāli — pārvērta par mākslas darbu: zelts, augu vijas, rāmja rotājumi. Izveido savu iniciāli!</p>
     <div class="info-toggle" id="infoToggle">ⓘ Par iniciāļiem</div>
@@ -119,20 +130,22 @@
     </div>
   </header>
  
-  <div class="stage">
-    <div class="panel">
-      <h2>Tavs iniciālis</h2>
-      <div class="sub">Ar "Zīmēt" pievieno brīvroku detaļas, ar "Dzēšgumija" izlabo</div>
+  <div class="main">
+  <div class="panel">
+    <h2>Tavs iniciālis</h2>
+    <div class="sub">Ar "Zīmēt" pievieno brīvroku detaļas, ar "Dzēšgumija" izlabo</div>
+    <div class="stage">
       <div class="canvas-holder"><svg id="initialSvg" viewBox="0 0 500 500"></svg></div>
-    </div>
-    <div class="panel compact">
-      <h2>Pārējais vārds</h2>
-      <div class="sub">Candara fontā, nedekorēts</div>
-      <div class="canvas-holder"><svg id="restSvg" viewBox="0 0 300 55"></svg></div>
+      <div class="rest-box">
+        <div class="lab">Pārējais vārds</div>
+        <div class="sub">Candara fontā, nedekorēts</div>
+        <div class="canvas-holder"><svg id="restSvg" viewBox="0 0 300 55"></svg></div>
+      </div>
     </div>
   </div>
  
   <div class="ctrlbar">
+   <div class="ctrl-grid">
     <div class="ctrl-row">
       <div class="ctrl-group">
         <label class="title">Vārds</label>
@@ -195,7 +208,7 @@
           <option value="3">3 līnijas</option>
         </select>
       </div>
-      <div class="ctrl-group wide">
+      <div class="ctrl-group wide full">
         <label class="title">Rīks</label>
         <div class="btn-row" style="margin-top:0;">
           <button class="action btn-toggle" data-tool="pen">✏️ Zīmēt</button>
@@ -212,15 +225,17 @@
         </div>
       </div>
     </div>
+   </div>
     <div class="btn-row">
       <button class="action btn-clear" id="undoBtn">Atcelt pēdējo līniju</button>
       <button class="action btn-clear" id="clearBtn">Notīrīt zīmējumu</button>
       <button class="action btn-download" id="downloadBtn">Lejupielādēt PNG</button>
     </div>
-  </div>
   <p class="font-note">Piezīme: Baguet Script, Adelina Camarie, Algerian, Vivaldi, Imprint MT Shadow, The Lighters, Docktrin, Gladiolus Script, Ligakare outline un Modern Neon ir sistēmas/licencēti fonti — burts tajos parādīsies pareizi, ja fonts ir instalēts izmantotajā ierīcē, citādi pārlūks izmantos aizvietotājfontu. ADLaM Display un Candara strādā visur automātiski.</p>
  
   <footer>Rīks nesaglabā datus — katra klase to sāk no jauna. · visaskola.lv</footer>
+  </div>
+  </div>
 </div>
  
 <script>
@@ -682,6 +697,38 @@
   renderInitial();
   renderRestWord();
   setupCanvasEvents();
+})();
+</script>
+
+<script>
+/* ── 16:9 mērogošana un pilnekrāns ── */
+(function(){
+  const app = document.getElementById('app');
+  window.APP_SCALE = 1;
+  function fitApp(){
+    const W = window.innerWidth, H = window.innerHeight;
+    const sc = Math.min(W/1600, H/900); window.APP_SCALE = sc;
+    app.style.transform = 'scale(' + sc + ')';
+    app.style.left = Math.max(0,(W-1600*sc)/2) + 'px';
+    app.style.top  = Math.max(0,(H-900*sc)/2) + 'px';
+  }
+  window.addEventListener('resize', fitApp); fitApp();
+  const btn = document.getElementById('fsBtn');
+  function isFs(){ return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+  function fallback(){ if(confirm('Pilnekrāna režīms šajā logā nav pieejams. Atvērt rīku jaunā cilnē?')) window.open(location.href,'_blank'); }
+  function toggle(){
+    const el = document.documentElement;
+    try{
+      if(isFs()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+      else if(el.requestFullscreen) el.requestFullscreen().catch(fallback);
+      else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      else fallback();
+    }catch(e){ fallback(); }
+  }
+  function upd(){ btn.textContent = isFs() ? '✕ Iziet no pilnekrāna' : '⛶ Atvērt pilnekrānu'; setTimeout(fitApp, 60); }
+  btn.addEventListener('click', toggle);
+  document.addEventListener('fullscreenchange', upd);
+  document.addEventListener('webkitfullscreenchange', upd);
 })();
 </script>
 </body>
